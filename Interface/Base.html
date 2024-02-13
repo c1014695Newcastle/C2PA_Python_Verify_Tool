@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link href="style/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SustainSearch</title>
+</head>
+<body>
+    <section class="hero has-shadow is-light is-fullheight">
+        <div class="hero-head is-fixed-top">
+            <nav class="navbar is-spaces has-text-dark has-shadow">
+                <div class="container">
+                     <div class="navbar-brand">
+                          <div id="navbarMenuHeroA" class="navbar-menu">
+                                <h3 class="title navbar-item has-text-centered has-text-dark">Verify</h3>
+                          </div>
+                     </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="hero-body is-light has-background-info-light">
+            <div class="column">
+
+            </div>
+            <div class="column is-four-fifths is-primary">
+               <div class="Box">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="file is-boxed is-centered">
+                          <label class="file-label">
+                              {{ form.profile_pic(class="file-input") }}
+                            <span class="file-cta">
+                              <span class="file-icon">
+                                  <i class="fa-light fa-folder-arrow-up"></i>
+                              </span>
+                              <span class="file-label">
+                                Choose a file…
+                              </span>
+                            </span>
+                          </label>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary" type="submit">Upload</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="column">
+
+            </div>
+        </div>
+
+        <footer class="footer has-background-dark">
+          <div class="content has-text-centered">
+            <p>
+            </p>
+          </div>
+        </footer>
+    </section>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="Box">
+    <form method="post" enctype="multipart/form-data">
+        <div class="file is-boxed is-centered">
+          <label class="file-label">
+              {{ form.profile_pic(class="file-input") }}
+            <span class="file-cta">
+              <span class="file-icon">
+                  <i class="fa-light fa-folder-arrow-up"></i>
+              </span>
+              <span class="file-label">
+                Choose a file…
+              </span>
+            </span>
+          </label>
+        </div>
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary" type="submit">Upload</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
