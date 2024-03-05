@@ -1,0 +1,45 @@
+{% extends "Base.html" %}
+
+{% block content %}
+
+<div class="Box">
+    <br>
+    <br>
+    <h2 class="title is-4 has-text-centered">Upload a File to Verify</h2>
+    <form method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+
+        <div class="field">
+            <div class="file is-boxed is-dark is-centered is-large">
+                <label class="file-label">
+                    <div hidden="hidden">
+                        {{ form.upload() }}
+                    </div>
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Select a file...
+                      </span>
+                    </span>
+                </label>
+            </div>
+            {% for error in form.upload.errors %}
+                <p class="help is-danger">{{ error }}</p>
+            {% endfor %}
+        </div>
+        <br>
+        <div class="buttons is-dark is-centered">
+            {{form.submit(class="button is-dark is-info is-centered")}}
+        </div>
+    </form>
+
+    <br>
+    <div class="column is-4-tablet is-offset-4-tablet is-12-mobile">
+        <p class="is-size-7 has-text-weight-light has-text-centered">Verify checks the content credentials of an image to determine whether it can be trusted. This includes whether an image contains AI generated content, has been altered using tools such as photoshop or whether the credentials have been tampered with in any way.</p>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link href="style/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verify</title>
+        <link rel="icon" type="image/png" href="/templates/images/icon.png">
+        <style>
+
+            .accordion_block {
+                display: none;
+                background-color: #f9f9f9;
+                border-color:  	#4a4a4a;
+                border-style: solid;
+                border-width: 1px;
+                padding: 10px 15px 10px 15px;
+                transition: 1s ease-out;
+            }
+
+            .accordion_title {
+                padding-left: 5px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-color:  	#4a4a4a;
+                border-style: solid;
+                border-width: 1px;
+                background-color: #7a7a7a;
+            }
+
+            .accordion_title:hover {
+                background: #b5b5b5;
+                cursor: pointer;
+            }
+
+            .active:after {
+                content: "\2796" !important; /* Unicode character for "minus" sign (-) */
+            }
+
+            .accordion_title:after {
+                content: "\2795"; /* Unicode character for "plus" sign (+) */
+                float: right;
+                margin-right: 10pt;
+            }
+
+        </style>
+    </head>
+
+    <body class="is-family-code">
+        <section class="hero has-shadow is-fullheight has-text-7-mobile has-text-5-tablet">
+            <div class="hero-head is-fixed-top">
+                <nav class="navbar is-spaces has-text-light has-shadow">
+                    <div class="container">
+                         <div class="navbar-brand">
+                             <a href={{url_for('index')}} class="title is-light navbar-item has-text-centered">Verify</a>
+                         </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="column">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                  <strong>Verify</strong> by <a href="https://github.com/c1014695Newcastle">Luke Watkin</a>.
+                </p>
+            </div>
+        </footer>
+    </body>
+    <script>
+        /* adapted from https://www.w3schools.com/howto/howto_js_accordion.asp */
+        var acc = document.getElementsByClassName("accordion_title");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+
+                 var panel = this.nextElementSibling;
+                this.classList.toggle("active");
+
+                if (panel.style.display === "block") {
+                  panel.style.display = "none";
+                } else {
+                  panel.style.display = "block";
+                }
+          });
+        }
+    </script>
+
+</html>

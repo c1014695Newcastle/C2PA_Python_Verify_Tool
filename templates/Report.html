@@ -1,0 +1,205 @@
+{% extends 'Base.html' %}
+
+{% block content %}
+    <br>
+    <h2 class="title has-text-centered">Your Results</h2>
+    {% if ai %}
+        <div class = 'column is-6 is-offset-3 has-text-centered is-centered has-background-danger'>
+            <p class="subtitle is-6"><strong>Image was likely created by or contains generative AI content</strong></p>
+        </div>
+        <br>
+    {% else %}
+        <div class = 'column is-6 is-offset-3 has-text-centered is-centered has-background-success'>
+            <p class="subtitle is-6"><strong>Image likely does not contain generative AI content</strong></p>
+        </div>
+        <br>
+    {% endif %}
+        <div class = 'column is-6 is-offset-3 has-text-centered is-centered has-background-danger'>
+            <p class="subtitle is-6"><strong>Image has likely been altered by photoshop tools</strong></p>
+        </div>
+        <br>
+    {% if errors| length > 0 %}
+        <div class = 'column is-6 is-offset-3 has-text-centered is-centered has-background-danger'>
+            <p class="subtitle is-6"><strong>Image credentials contain errors when validated</strong></p>
+        </div>
+        <br>
+    {% endif %}
+    <div class="column is-10-desktop is-offset-1-desktop">
+        <div class="columns">
+            <div class="column is-6-desktop is-offset-0-desktop is-8-tablet is-offset-2-tablet is-12-mobile">
+                <img src='{{ path }}'>
+            </div>
+
+            <div class="column is-6-desktop is-offset-0-desktop is-10-tablet is-offset-1-tablet is-12-mobile">
+
+                {% if errors| length > 0 %}
+                    <div class="accordion_title">
+                        <a class="subtitle is-6 has-text-light">Errors:</a>
+                    </div>
+                    <div class="accordion_block">
+                        <div class="content">
+                            <p class = "is-size-7-mobile">The credentials could not be validated due to the following errors:</p>
+                            <ul>
+                                {% for error in errors %}
+                                    <li class="is-size-7-mobile">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                <div class="accordion_title">
+                    <a class="subtitle is-6 has-text-light">Summary:</a>
+                </div>
+                <div class="accordion_block">
+                    <div class="content">
+                        <h6 class = "is-size-7-mobile">About Image:</h6>
+                        <ul>
+                            {% if errors|length == 0 %}
+                                {% if ai %}
+                                    <li><p class = "is-size-7-mobile">Based on the content credentials, it is highly likely this image contains AI generated content.</p></li>
+                                {% else %}
+                                    <li><p class = "is-size-7-mobile">Based on the content credentials, it is unlikely this image contains AI generated content.</p></li>
+                                {% endif %}
+                                {% if modifications|length > 0 %}
+                                    <li><p class = "is-size-7-mobile">Based on the content credentials, it is highly likely this image has been altered by photoshop tools.</p></li>
+                                {% else %}
+                                    <li><p class = "is-size-7-mobile">Based on the content credentials, it is unlikely this image has been altered by photoshop tools.</p></li>
+                                {% endif %}
+                            {% else %}
+                                <li><p class = "is-size-7-mobile">The content credentials of this image could not be verified due to an error. </p></li>
+                            {% endif %}
+
+                        </ul>
+
+                        <h6 class = "is-size-7-mobile">Credential Info:</h6>
+                        <ul>
+                            <li><p class = "is-size-7-mobile"><strong>Issued By:</strong> John Doe</p></li>
+                            <li><p class = "is-size-7-mobile"><strong>Issued On:</strong> Jan 17 2024</p></li>
+                        </ul>
+
+                        <h6 class = "is-size-7-mobile">Actions:</h6>
+                        {% if modifications|length== 0 %}
+                            <p class = "is-size-7-mobile">The image has no recorded modifications.</p>
+                        {% else %}
+                            <p class = "is-size-7-mobile">The image has the following modifications:</p>
+                        {% endif %}
+
+                        <ul>
+                        {% for modification in modifications %}
+                                <li class="is-size-7-mobile">{{ modification }}</li>
+                        {% endfor %}
+                        </ul>
+                        <h6 class = "is-size-7-mobile">Ingredients:</h6>
+                        <ul>
+                            {% if ingredients|length == 0 %}
+                                <li class = "is-size-7-mobile">No ingredients found</li>
+                            {% endif %}
+                            {% for ingredient in ingredients %}
+                                    <li class = "is-size-7-mobile">{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion_title">
+                    <a class="subtitle is-6 has-text-light">Camera Info:</a>
+                </div>
+                <div class="accordion_block">
+                    <div class="content">
+                        <p class="is-size-7-mobile has-text-weight-light">Please note that this info can be modified by online tools.</p>
+                        <h6 class = "is-size-7-mobile">Device Info:</h6>
+                        <ul>
+                            <li><p class = "is-size-7-mobile">TBA</p></li>
+                        </ul>
+                        <h6 class = "is-size-7-mobile">Location:</h6>
+                        <ul>
+                            {% if latitude and longitude %}
+                                <li><p class = "is-size-7-mobile"><strong>Latitude:</strong> X</p></li>
+                                <li><p class = "is-size-7-mobile"><strong>Longitude:</strong> Y</p></li>
+                                <br>
+                                <p>ADD MAP USING FOLIUM</p>
+                            {% else %}
+                                <li><p class = "is-size-7-mobile">No location data found</p></li>
+                            {% endif %}
+                        </ul>
+                        <h6 class = "is-size-7-mobile">Time:</h6>
+                        <ul>
+                            <li><p class = "is-size-7-mobile">TBA</p></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion_title">
+                    <a class="subtitle is-6 has-text-light">Modifications:</a>
+                </div>
+                <div class="accordion_block">
+                    {% if modifications|length== 0 %}
+                    <div class = 'column has-background-success has-text-6'><strong>No modifications Found</strong></div>
+                    {% elif modifications|length > 3 %}
+                    <div class = 'column has-background-info'><strong>{{ modifications|length }} Found</strong></div>
+                    {% else %}
+                        <div class = 'column has-background-danger'><strong>{{ modifications|length}} Found</strong></div>
+                    {% endif %}
+                    <div class="column">
+                        <div class="content">
+                            <p class = "is-size-7-mobile">Modifications found in the image:</p>
+                            <ul>
+                            {% for modification in modifications %}
+                                    <li class="is-size-7-mobile"><strong>{{ modification }}</strong></li>
+                                    <li class="is-size-7-mobile" style="margin-left: 15px">{{lookup[modification]}}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion_title">
+                    <a class="subtitle has-text-light is-6">Ingredients:</a>
+                </div>
+                <div class="accordion_block">
+                    <div class="content">
+                        {% if ingredients|length < 1 %}
+                            <div class = 'column has-background-success'>Image is not composite</div>
+                        {% else %}
+                        <div class = 'column has-background-info'><strong>{{ ingredients|length }} Found</strong></div>
+                        {% endif %}
+                        <br>
+                        <p class = "is-size-7-mobile">Ingredients found in the image:</p>
+                        <ul>
+                            {% if ingredients|length == 0 %}
+                                <li class = "is-size-7-mobile">No ingredients found</li>
+                            {% endif %}
+                        {% for ingredient in ingredients %}
+                                <li class = "is-size-7-mobile">{{ ingredient }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="accordion_title">
+                    <a class="subtitle is-6 has-text-light">Signer:</a>
+                </div>
+                <div class="accordion_block">
+                    <div class="content">
+                        <h6 class = "is-size-7-mobile">About Credentials:</h6>
+                        <ul>
+                            <li><p class = "is-size-7-mobile"><strong>Issued By:</strong> John Doe</p></li>
+                            <li><p class = "is-size-7-mobile"><strong>Issued On:</strong> Jan 17 2024</p></li>
+                        </ul>
+                        <h6 class="is-size-7-mobile">Additional Information:</h6>
+                        <ul>
+                            <li><p class = "is-size-7-mobile">TBA</p></li>
+                        </ul>
+                    </div>
+                </div>
+                <br>
+                <button class="button is-small is-dark">Download a Report</button>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
