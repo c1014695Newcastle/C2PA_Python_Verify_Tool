@@ -47,8 +47,6 @@ def index():
         session['file'] = os.path.join('static/uploads', name)
         form.upload.data.save(os.path.join('static/uploads', name))
         return redirect(url_for('report'))
-    else:
-        print('Form not validated')
     return render_template('Interface.html', form=form)
 
 
@@ -71,6 +69,7 @@ def report():
 def report():
     name = session['file']
     json_store = json.loads(c2pa.read_file(name, 'Verify/Extract/temp'))
+    print(json.dumps(json_store, indent=2))
     modifications = []
     ingredients = []
     errors = []
