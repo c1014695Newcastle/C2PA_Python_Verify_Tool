@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <h2 class="title is-3 has-text-centered">Upload a File to Verify</h2>
+    <div class="column is-half-tablet is-offset-one-quarter-tablet">
+        <form method="post" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+
+            <div class="field">
+                <div class="file is-boxed is-dark is-centered is-large">
+                    <label class="file-label">
+                        <div hidden="hidden">
+                            {{ form.upload() }}
+                        </div>
+                        <span class="file-cta">
+                          <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                          </span>
+                          <span class="file-label">
+                            Select a file...
+                          </span>
+                        </span>
+                    </label>
+                </div>
+                {% for error in form.upload.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="field">
+                <label class="label is-centered">Or upload a URL:</label>
+                <div class="control">
+                    {{ form.url(class="input") }}
+                </div>
+                {% for error in form.url.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="buttons is-centered">
+                {{form.submit(class="button is-dark is-centered")}}
+            </div>
+        </form>
+    </div>
+    <br>
+    <div class="column is-4-tablet is-offset-4-tablet is-12-mobile">
+        <p class="is-size-7 has-text-weight-light has-text-centered">Verify checks the content credentials of an image to determine whether it can be trusted. This includes whether an image contains AI generated content, has been altered using tools such as photoshop or whether the credentials have been tampered with in any way. For more information, click <a style="text-decoration: None; color:inherit;" href="{{ url_for('info.info_page') }}"><strong>here</strong></a>.</p>
+    </div>
+
+
+{% endblock %}

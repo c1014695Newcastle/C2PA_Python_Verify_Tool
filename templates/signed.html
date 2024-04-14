@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <br>
+    <h2 class="title has-text-centered">Image Signed</h2>
+    <div class="column is-6-desktop is-offset-3-desktop">
+        <img src='{{ path }}'>
+        <br>
+        <div class="buttons is-centered">
+            <a class="button is-medium-tablet is-small-mobile has-text-centered is-dark" href="{{ url_for('sign.download') }}">Download</a>
+            <a class="button is-medium-tablet is-small-mobile has-text-centered is-dark" href="{{ url_for('sign.sign') }}">Upload Another Image</a>
+        </div>
+    </div>
+{% endblock %}

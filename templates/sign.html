@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block content %}
+        <br>
+        <br>
+        <h2 class="title is-4 has-text-centered">Upload a File to Add Credentials</h2>
+        <div class="column is-half-tablet is-offset-one-quarter-tablet">
+            <div class="buttons is-centered">
+                <a class="button is-dark" href="{{ url_for('sign.manifest_upload') }}">Upload credentials</a>
+                <a class="button is-dark" href="{{ url_for('sign.manifest_form') }}">Complete a Form</a>
+            </div>
+            <br>
+            {% if upload == 1 %}
+                <h2 class="title is-4 has-text-centered">Upload Your Image and Manifest</h2>
+
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+
+                    <h3 class="title is-6 has-text-centered">Image (File or URL)</h3>
+                    <div class="field">
+                        <div class="file is-boxed is-dark is-centered is-large">
+                            <label class="file-label">
+                                <div hidden="hidden">
+                                    {{ form.to_sign() }}
+                                </div>
+                                <span class="file-cta">
+                                  <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                  </span>
+                                  <span class="file-label">
+                                    Select a file...
+                                  </span>
+                                </span>
+                            </label>
+                        </div>
+                        {% for error in form.to_sign.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <br>
+
+                    <div class="field">
+                        <div class="control">
+                            {{ form.url_to_sign(class="input", placeholder='URL (Optional)') }}
+                        </div>
+                        {% for error in form.url_to_sign.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <br>
+
+                    <h3 class="title is-6 has-text-centered">Manifest</h3>
+                    <div class="field">
+                        <div class="file is-boxed is-dark is-centered is-large">
+                            <label class="file-label">
+                                <div hidden="hidden">
+                                    {{ form.manifest() }}
+                                </div>
+                                <span class="file-cta">
+                                  <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                  </span>
+                                  <span class="file-label">
+                                    Select a file...
+                                  </span>
+                                </span>
+                            </label>
+                        </div>
+                        {% for error in form.manifest.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <br>
+
+                    <div class="buttons is-centered">
+                        {{form.submit(class="button is-dark is-centered")}}
+                    </div>
+                </form>
+            {% elif upload == 2 %}
+                <h2 class="title is-4 has-text-centered">Complete the Form and Submit</h2>
+
+                <form method="post" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+
+                    <h3 class="title is-6 has-text-centered">Image</h3>
+                    <div class="field">
+                        <div class="file is-boxed is-dark is-centered is-large">
+                            <label class="file-label">
+                                <div hidden="hidden">
+                                    {{ form.to_sign() }}
+                                </div>
+                                <span class="file-cta">
+                                  <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                  </span>
+                                  <span class="file-label">
+                                    Select a file...
+                                  </span>
+                                </span>
+                            </label>
+                        </div>
+                        {% for error in form.to_sign.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <h3 class="title is-6">Select any which apply:</h3>
+                    <label class="field-label">Save Image Metadata (if any):</label>
+                    {{ form.metadata() }}
+                    {% for error in form.metadata.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Create a thumbnail:</label>
+                    {{ form.thumbnail() }}
+                    {% for error in form.thumbnail.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Was this image AI generated:</label>
+                    {{ form.ai_image() }}
+                    {% for error in form.ai_image.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Any Colour Adjustments:</label>
+                    {{ form.color_adjustments() }}
+                    {% for error in form.color_adjustments.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Any Format Changes:</label>
+                    {{ form.converted() }}
+                    {% for error in form.converted.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Any Drawing Tools Applied:</label>
+                    {{ form.drawing() }}
+                    {% for error in form.drawing.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Has this asset been cropped:</label>
+                    {{ form.cropped() }}
+                    {% for error in form.cropped.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Have any filters been applied:</label>
+                    {{ form.filtered() }}
+                    {% for error in form.filtered.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Has any data been removed from the asset:</label>
+                    {{ form.orientation() }}
+                    {% for error in form.removed.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Has the size of the asset changed:</label>
+                    {{ form.published() }}
+                    {% for error in form.published.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+
+                    <label class="field-label">Any orientation changes:</label>
+                    {{ form.orientation() }}
+                    {% for error in form.orientation.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Has this asset been published:</label>
+                    {{ form.published() }}
+                    {% for error in form.published.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <label class="field-label">Has this asset been transcoded:</label>
+                    {{ form.published() }}
+                    {% for error in form.transcoded.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                    <br>
+
+                    <div class="buttons is-centered">
+                        {{form.submit(class="button is-dark is-centered")}}
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+{% endblock %}
