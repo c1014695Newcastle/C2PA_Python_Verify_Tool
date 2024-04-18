@@ -1,0 +1,102 @@
+<div style="font-family: Arial; box-sizing: border-box;">
+    <hr>
+    <div style="width: 100%; display: table;">
+        <h2><strong>Credentials Report - {{ filename }}</strong></h2>
+        <p><strong>Report Issued: </strong>{{ date }}</p>
+        <h5><i>This is a summary of the active manifest for the asset's content credential.</i></h5>
+    </div>
+    <hr>
+    <h3><strong>Summary:</strong></h3>
+    <div style="width: 75%; margin-left: auto; margin-right: auto;">
+        <img src="data:image/jpg;base64,{{ uploaded_image|safe }}" style="display: block; margin-left: auto; margin-right: auto; max-height: 400px;">
+        <h6 style="text-align: center;">Your uploaded content.</h6>
+    </div>
+    {% if errors|length == 0 %}
+        {% if ai %}
+            <p style="text-align: left;">Based on the credentials, your image does contain AI generated content.</p>
+        {% else %}
+            <p style="text-align: left;">Based on the credentials, your image does not contain AI generated content.</p>
+        {% endif %}
+        {% if actions|length > 0 %}
+            <p style="text-align: left;">Based on the credentials, your image has been augmented by photo manipulation tools.</p>
+        {% else %}
+            <p style="text-align: left;">Based on the credentials, your image has not been augmented by photo manipulation tools.</p>
+        {% endif %}
+        <hr>
+        <h3><strong>Credential Info:</strong></h3>
+        <p style="text-align: left;">The most recent credential assigned to the asset was from <strong>{{ signer['issuer'] }}</strong>, and was issued on <strong>{{ signer['date'] }}</strong>.</p>
+        <hr>
+        <h3><strong>Camera Info:</strong></h3>
+        {% if camera_info|length == 0 %}
+            <p>The content credentials list no information about the camera used to create the asset. This could imply that the asset was not created using a camera or that the information was not included when the credentials were made.</p>
+        {% else %}
+            <p>The device used to produce this asset is a <strong>{{ camera_info['device'] }}</strong>.</p>
+            {% if camera_info['latitude'] and camera_info['longitude'] %}
+                <p>The asset was taken at:</p>
+                <ul>
+                    <li><strong>Latitude: </strong>{{ camera_info['latitude'] }}</li>
+                    <li><strong>Longitude: </strong>{{ camera_info['longitude'] }}</li>
+                </ul>
+                <p><i>A full map can be shown on Check It.</i></p>
+            {% else %}
+                <p>The credentials do not store the location of where the asset was taken.</p>
+            {% endif %}
+        {% endif %}
+        <hr>
+        <h3><strong>Listed Modifications:</strong></h3>
+        <p>In total, the credentials list <strong>{{ actions|length }}</strong> actions:</p>
+        {% if actions|length > 0 %}
+            <ul>
+            {% for action in actions.keys() %}
+                <li><strong>{{ action }}</strong> - {{ actions[action] }}</li>
+                <br>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <hr>
+        <h3><strong>Listed Ingredients:</strong></h3>
+        {% if ingredients|length == 0 %}
+            <p>The credentials list no ingredients, which implies that the asset is not composite.</p>
+        {% else %}
+            {% if ingredients|length == 1 %}
+                <p>The credentials list <strong>{{ ingredients|length }}</strong> ingredient. It is shown below:</p>
+            {% else %}
+                <p>The credentials list <strong>{{ ingredients|length }}</strong> ingredients. They are listed below:</p>
+            {% endif %}
+            {% for image in ingredients.keys() %}
+                <div style="width: 100%; display: table;">
+                    <h4>{{ image }}</h4>
+                    <div style="height: 125px; border: 10px #4a4a4a;">
+                        <div style="width: 50%; float: left;">
+                            <img style="margin-left: auto; margin-right: auto; display: block; max-width: 100%; max-height: 200px;" src="data:image/jpg;base64,{{ uploaded_image|safe }}" alt="Uploaded Asset">
+                            <h6 style="text-align: center;">Your Uploaded Asset.</h6>
+                        </div>
+                        <div style="width: 50%; float: left;">
+                            <img style="margin-left: auto; margin-right: auto; display: block; max-width: 100%; max-height: 200px;" src="data:image/jpg;base64,{{ ingredients[image]['bytes']|safe }}" alt="Listed Ingredient">
+                            <h6 style="text-align: center;">The Listed Ingredient.</h6>
+                        </div>
+                    </div>
+                    {% if ingredients[image]['use'] == 'componentOf' %}
+                        <p class = "is-size-7">This ingredient was placed within the original image.</p>
+                    {% elif ingredients[image]['use'] == 'parentOf' %}
+                        <p class = "is-size-7">This ingredient was modified to make the current image.</p>
+                    {% else %}
+                        <p class = "is-size-7">This ingredient was used as in input to an AI model to produce the current image.</p>
+                    {% endif %}
+                    <br>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p>The credentials for this asset could not be validated.</p>
+        <hr>
+        <h3>Errors:</h3>
+        <p>The credentials produced the following errors:</p>
+        <ul>
+        {% for error in errors.keys() %}
+            <li><strong>{{ error }}</strong> - {{ errors[error] }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <hr>
+</div>

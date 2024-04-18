@@ -7,9 +7,6 @@ import requests
 from werkzeug.utils import secure_filename
 from flask import session, send_file
 
-from c2pa_dissertation.action import Action
-from c2pa_dissertation.metadata import read_exif_data
-
 sign_blueprint = Blueprint('sign', __name__, template_folder='templates')
 
 @sign_blueprint.route('/sign', methods=['GET'])

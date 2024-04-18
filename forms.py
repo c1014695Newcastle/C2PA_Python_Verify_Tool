@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 
 class UploadForm(FlaskForm):
-    upload = FileField('File', validators=[FileAllowed(['jpg', 'png'])])
+    upload = FileField('File', validators=[FileAllowed(['jpg', 'png', 'webp'])])
     url = StringField('URL')
     submit = SubmitField('Upload')
 
