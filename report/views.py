@@ -84,11 +84,11 @@ def generate_report():
 
 @report_blueprint.route('/report', methods=['GET', 'POST'])
 def report():
-    name = session['file']
     try:
-        json_store = json.loads(c2pa.read_file(name, 'static/extract'))
+        json_store = json.loads(c2pa.read_file(session['file'], 'static/extract'))
+        print(json_store)
     except c2pa.c2pa.Error.ManifestNotFound:
-        return render_template('report.html', not_found=True, path=name)
+        return render_template('report.html', not_found=True, path=session['file'])
 
     modifications = {}
     signer_info = {}
@@ -106,57 +106,53 @@ def report():
     session['ingredients'] = ingredients
     session['filename'] = filename
 
-    for manifest in json_store['manifests']:
-        if manifest == json_store['active_manifest']:
-            filename = json_store['manifests'][manifest]['title']
-            session['filename'] = filename
-            signer_info['issuer'] = json_store['manifests'][manifest]['signature_info']['issuer']
-            signer_info['date'] = datetime.fromisoformat(
-                json_store['manifests'][manifest]['signature_info']['time']).strftime('%d %B, %Y')
-
-            for action in json_store['manifests'][manifest]['assertions']:
-                if action['label'] == 'stds.exif' or action['label'] == 'c2pa.metadata':
-                    keys = action['data'].keys()
-                    if 'EXIF:GPSLatitude' in keys:
-                        metadata['latitude'] = float(action['data']['EXIF:GPSLatitude'])
-                    if 'EXIF:GPSLongitude' in keys:
-                        metadata['longitude'] = float(action['data']['EXIF:GPSLongitude'])
-                    if 'EXIF:Make' in keys and 'Exif:Model':
-                        metadata['device'] = action['data']['EXIF:Make'] + " " + action['data']['EXIF:Model']
-                        ai = False
-
-                if action['label'] == 'c2pa.actions':
-                    for a in action['data']['actions']:
-                        if a['action'] == 'c2pa.created' and ('digitalSourceType' in a.keys()):
-                            if a[
-                                'digitalSourceType'] == 'http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia':
-                                ai = True
-                        action_string = str(a['action']).replace('c2pa.', '')
-                        action_string = action_string.replace('_', ' ')
-                        modifications[action_string] = lookup[action_string]
-                    session['actions'] = modifications
-
-            for ingredient in json_store['manifests'][manifest]['ingredients']:
-                if ingredient['relationship'] == 'inputTo':
-                    ai = True
-                ingredient_path = 'static/extract/' + ingredient['thumbnail']['identifier']
-                ingredients[str(ingredient['title'])] = {
-                    'path': ingredient_path,
-                    'use': ingredient['relationship']}
-                print(ingredients)
-            session['ingredients'] = ingredients
-        session['metadata'] = metadata
-        session['ai'] = ai
-        session['signer_info'] = signer_info
-
     if 'validation_status' in json_store.keys():
         for validation in json_store['validation_status']:
             errors[validation['code']] = validation['explanation']
-    session['errors'] = errors
+        session['errors'] = errors
+        return render_template('report.html', not_found=False, path=session['file'], errors=errors)
 
+    active_manifest = json_store['manifests'][json_store['active_manifest']]
+    session['filename'] = json_store['manifests'][json_store['active_manifest']]['title']
+    signer_info['issuer'] = active_manifest['signature_info']['issuer']
+    signer_info['date'] = datetime.fromisoformat(active_manifest['signature_info']['time']).strftime('%d %B, %Y')
+
+    for assertion in active_manifest['assertions']:
+        if 'stds.exif' in assertion['label']:
+            exif_keys = assertion.keys()
+            if 'EXIF:GPSLatitude' in exif_keys:
+                metadata['latitude'] = float(assertion['data']['EXIF:GPSLatitude'])
+            if 'EXIF:GPSLongitude' in exif_keys:
+                metadata['longitude'] = float(assertion['data']['EXIF:GPSLongitude'])
+            if 'EXIF:Make' in exif_keys and 'Exif:Model':
+                metadata['device'] = assertion['data']['EXIF:Make'] + " " + assertion['data']['EXIF:Model']
+                ai = False
+
+        if 'c2pa.actions' in assertion['label']:
+            for action in assertion['data']['actions']:
+                if action['action'] == 'c2pa.created' and 'digitalSourceType' in action.keys():
+                    if action['digitalSourceType'] == 'http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia':
+                        ai = True
+                action_string = str(action['action']).replace('c2pa.', '').replace('_', ' ')
+                modifications[action_string] = lookup[action_string]
+            session['actions'] = modifications
+
+    for ingredient in active_manifest['ingredients']:
+        if ingredient['relationship'] == 'inputTo':
+            ai = True
+        ingredient_path = 'static/extract/' + ingredient['thumbnail']['identifier']
+        ingredients[str(ingredient['title'])] = {
+            'path': ingredient_path,
+            'use': ingredient['relationship']
+        }
+    session['ingredients'] = ingredients
+
+    session['metadata'] = metadata
+    session['ai'] = ai
+    session['signer_info'] = signer_info
     if 'latitude' in metadata.keys() and 'longitude' in metadata.keys():
         m = make_map(metadata['latitude'], metadata['longitude'])
 
     return render_template('report.html', not_found=False, modifications=modifications, errors=errors,
                            ingredients=ingredients, ai=ai, metadata=metadata,
-                           path=name, signer=signer_info, map=m)
+                           path=session['file'], signer=signer_info, map=m)
