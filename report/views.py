@@ -44,7 +44,7 @@ def demo():
     return redirect(url_for('report.report'))
 
 
-@report_blueprint.route('/download', methods=['GET', 'POST'])
+@report_blueprint.route('/report_download', methods=['GET', 'POST'])
 def generate_report():
     with open(session['file'], 'rb') as f:
         image = f.read()

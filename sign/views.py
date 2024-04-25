@@ -158,27 +158,27 @@ def manifest_form():
                 'instance_id': opened_ingredient_dict['instance_id']
             })
 
-        if form.color_adjustments.data is 'True':
+        if form.color_adjustments.data == 'True':
             actions.append({'action': 'c2pa.colour_adjustments'})
-        if form.converted.data is 'True':
+        if form.converted.data == 'True':
             actions.append({'action': 'c2pa.converted'})
-        if form.cropped.data is 'True':
+        if form.cropped.data == 'True':
             actions.append({'action': 'c2pa.cropped'})
-        if form.drawing.data is 'True':
+        if form.drawing.data == 'True':
             actions.append({'action': 'c2pa.drawing'})
-        if form.edited.data is 'True':
+        if form.edited.data == 'True':
             actions.append({'action': 'c2pa.edited'})
-        if form.filtered.data is 'True':
+        if form.filtered.data == 'True':
             actions.append({'action': 'c2pa.filtered'})
-        if form.orientation is 'True':
+        if form.orientation == 'True':
             actions.append({'action': 'c2pa.opened'})
-        if form.published.data is 'True':
+        if form.published.data == 'True':
             actions.append({'action': 'c2pa.published'})
-        if form.removed.data is 'True':
+        if form.removed.data == 'True':
             actions.append({'action': 'c2pa.removed'})
-        if form.resized.data is 'True':
+        if form.resized.data == 'True':
             actions.append({'action': 'c2pa.resized'})
-        if form.transcoded.data is 'True':
+        if form.transcoded.data == 'True':
             actions.append({'action': 'c2pa.transcoded'})
 
         if actions is not None:
