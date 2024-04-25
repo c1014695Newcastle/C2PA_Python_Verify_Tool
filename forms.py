@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import FileField, SubmitField, StringField, RadioField
-from wtforms.validators import DataRequired
+from wtforms import FileField, SubmitField, StringField, RadioField, MultipleFileField
+from wtforms.validators import DataRequired, Optional
 
 
 class UploadForm(FlaskForm):
@@ -27,28 +27,28 @@ class UploadSignForm(FlaskForm):
 
 
 class FormSign(FlaskForm):
-    to_sign = FileField('File', validators=[FileAllowed(['jpg', 'png'])])
+    to_sign = FileField('File', validators=[FileAllowed(['jpg', 'png', 'webp'])])
 
-    #Ingredients
+    # metadata
     metadata = RadioField('Metadata', choices=[(True, 'Yes'), (False, 'No')])
 
-    #Thumbnail
-    thumbnail = RadioField('Thumbnail', choices=[(True, 'Yes'), (False, 'No')])
-
     # Actions
-    ai_image = RadioField('AI', choices=[(True, 'Yes')], validators=[DataRequired()])
-    color_adjustments = RadioField('Colour Adjustments', choices=[(True, 'Yes')], validators=[DataRequired()])
+    ai_image = RadioField('AI', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+    opened_ingredient = FileField('Ingredients', validators=[Optional(), FileAllowed(['jpg', 'png', 'webp'])])
+    placed_ingredients = MultipleFileField('Placed Ingredients',
+                                           validators=[Optional(), FileAllowed(['jpg', 'png', 'webp'])])
+    color_adjustments = RadioField('Colour Adjustments', choices=[(True, 'Yes'), (False, 'No')],
+                                   validators=[DataRequired()])
     converted = RadioField('Format change', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
     cropped = RadioField('Cropped', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
     drawing = RadioField('Drawing', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
     edited = RadioField('Edited', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
     filtered = RadioField('Filtered', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    opened = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    orientation = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    placed = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    published = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    removed = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    resized = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    transcoded = RadioField('colour adjustments', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
-    submit = SubmitField()
 
+    orientation = RadioField('orientation', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+
+    published = RadioField('published', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+    removed = RadioField('removed', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+    resized = RadioField('resized', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+    transcoded = RadioField('transcoded', choices=[(True, 'Yes'), (False, 'No')], validators=[DataRequired()])
+    submit = SubmitField()

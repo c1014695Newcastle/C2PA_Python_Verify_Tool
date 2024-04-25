@@ -9,6 +9,9 @@ from PIL import Image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'longandrandomkey'
+app.config['VERIFY_UPLOAD_FOLDER'] = 'static/uploads/'
+app.config['INGREDIENT_UPLOAD_FOLDER'] = 'static/ingredient_uploads/'
+app.config['TO_SIGN_FOLDER'] = 'static/sign_uploads/'
 
 
 @app.errorhandler(404)  # Not Found
@@ -47,11 +50,6 @@ def index():
             file.save('static/uploads/{}'.format(name), format='JPEG')
         return redirect(url_for('report.report'))
     return render_template('upload.html', form=form)
-
-
-@app.route('/sign', methods=['GET', 'POST'])
-def sign():
-    return render_template('sign.html')
 
 
 if __name__ == '__main__':

@@ -34,8 +34,8 @@ report_blueprint = Blueprint('report', __name__, template_folder='templates')
 
 def make_map(lat, lng):
     map = folium.Map(location=(lat, lng), zoom_start=15, min_width=400, max_width=400, max_height=400)
-    folium.Marker(location=[lat, lng]).add_to(map)
-    return map
+    folium.Marker(location=[lat, lng], popup='This is the approximate location').add_to(map)
+    return map._repr_html_()
 
 
 @report_blueprint.route('/demo', methods=['GET', 'POST'])
@@ -86,7 +86,7 @@ def generate_report():
 def report():
     try:
         json_store = json.loads(c2pa.read_file(session['file'], 'static/extract'))
-        print(json_store)
+        print(json.dumps(json_store, indent=2))
     except c2pa.c2pa.Error.ManifestNotFound:
         return render_template('report.html', not_found=True, path=session['file'])
 
@@ -119,14 +119,17 @@ def report():
 
     for assertion in active_manifest['assertions']:
         if 'stds.exif' in assertion['label']:
-            exif_keys = assertion.keys()
+            exif_keys = assertion['data'].keys()
             if 'EXIF:GPSLatitude' in exif_keys:
                 metadata['latitude'] = float(assertion['data']['EXIF:GPSLatitude'])
             if 'EXIF:GPSLongitude' in exif_keys:
                 metadata['longitude'] = float(assertion['data']['EXIF:GPSLongitude'])
-            if 'EXIF:Make' in exif_keys and 'Exif:Model':
+            if 'EXIF:DateTime' in exif_keys:
+                metadata['date'] = datetime.strptime(assertion['data']['EXIF:DateTime'], '%Y:%m:%d %H:%M:%S').strftime('%d %B, %Y')
+            if ('EXIF:Make' in exif_keys) and ('EXIF:Model' in exif_keys):
                 metadata['device'] = assertion['data']['EXIF:Make'] + " " + assertion['data']['EXIF:Model']
                 ai = False
+            print(metadata)
 
         if 'c2pa.actions' in assertion['label']:
             for action in assertion['data']['actions']:
@@ -150,7 +153,7 @@ def report():
     session['metadata'] = metadata
     session['ai'] = ai
     session['signer_info'] = signer_info
-    if 'latitude' in metadata.keys() and 'longitude' in metadata.keys():
+    if ('latitude' in metadata.keys()) and ('longitude' in metadata.keys()):
         m = make_map(metadata['latitude'], metadata['longitude'])
 
     return render_template('report.html', not_found=False, modifications=modifications, errors=errors,

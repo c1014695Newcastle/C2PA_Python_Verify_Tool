@@ -102,12 +102,10 @@
                                             {{ map | safe }}
                                         </div>
                                     {% else %}
-                                        <li><p class = "is-size-7-mobile">No location data found</p></li>
+                                        <p class = "is-size-7-mobile">No location data found</p>
                                     {% endif %}
                                 <h6 class = "is-size-7-mobile">Time:</h6>
-                                <ul>
-                                    <li><p class = "is-size-7-mobile">TBA</p></li>
-                                </ul>
+                                <p class = "is-size-7-mobile">This photo was taken on {{ metadata['date'] }}</p>
                             {% else %}
                                 <p class = "is-size-7-mobile">This image has no metadata stored in the credentials</p>
                             {% endif %}
