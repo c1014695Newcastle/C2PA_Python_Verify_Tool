@@ -1,10 +1,11 @@
-flask~=3.0.2
+flask
 c2pa-python
 flask_wtf
-pillow~=10.2.0
-folium~=0.16.0
-requests~=2.31.0
-Werkzeug~=3.0.1
-WTForms~=3.1.2
+pillow
+folium
+requests
+Werkzeug
+WTForms
+cargo
 python-dateutil
 pdfkit
