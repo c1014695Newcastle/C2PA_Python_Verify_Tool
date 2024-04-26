@@ -1,17 +1,15 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 from werkzeug.utils import secure_filename
-
+from dotenv import load_dotenv
 import os
 import requests
 from forms import UploadForm
 
 from PIL import Image
 
+load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'longandrandomkey'
-app.config['VERIFY_UPLOAD_FOLDER'] = 'static/uploads/'
-app.config['INGREDIENT_UPLOAD_FOLDER'] = 'static/ingredient_uploads/'
-app.config['TO_SIGN_FOLDER'] = 'static/sign_uploads/'
 
 
 @app.errorhandler(404)  # Not Found
