@@ -54,17 +54,27 @@
 
     <body class="is-family-code">
         <section class="hero has-shadow is-fullheight has-text-7-mobile has-text-5-tablet">
-            <div class="hero-head has-background-dark has-text-light is-fixed-top">
-                <nav class="navbar is-dark is-spaces has-shadow">
+            <div class="hero-head has-background-dark is-fixed-top">
+                <nav class="navbar is-dark">
                     <div class="container">
-                         <div class="navbar-brand">
-                             <a href="{{ url_for('index') }}" class="title is-light navbar-item has-text-centered">Check It</a>
-                         </div>
-                    </div>
-                    <div class="navbar-start" id="desktop_navbar">
-                        <a class="navbar-item" href="{{ url_for('index') }}">Verify</a>
-                        <a class="navbar-item" href="{{ url_for('sign.sign') }}">Sign</a>
-                        <a class="navbar-item" href="{{ url_for('info.info_page') }}">Info</a>
+
+                        <div class="navbar-brand">
+                            <a href="" class="navbar-item has-text-centered"><strong>Check It</strong></a>
+
+                            <a class="navbar-burger" id="burger-menu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </a>
+                        </div>
+
+                        <div class="navbar-menu"  id="links">
+                            <div class="navbar-start">
+                                <a class="navbar-item" href="{{ url_for('index') }}">Verify</a>
+                                <a class="navbar-item" href="{{ url_for('sign.sign') }}">Sign</a>
+                                <a class="navbar-item" href="{{ url_for('info.info_page') }}">Info</a>
+                            </div>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -81,7 +91,14 @@
             </div>
         </footer>
     </body>
+    <script>
+        const icon = document.querySelector('#burger-menu');
+        const menu = document.querySelector('#links');
 
+        icon.addEventListener('click', () => {
+            menu.classList.toggle('is-active');
+        })
+    </script>
     <script>
         /* adapted from https://www.w3schools.com/howto/howto_js_accordion.asp */
         var acc = document.getElementsByClassName("accordion_title");
