@@ -20,7 +20,7 @@
                 </div>
             {% endif %}
             <br>
-            {% if modifications|length > 0 %}
+            {% if modifications['editorial']|length > 0 %}
                 <div class = 'column is-6 is-offset-3 has-text-centered is-centered has-background-danger'>
                     <p class="subtitle is-6"><strong>Image has likely been altered by photoshop tools</strong></p>
                 </div>
@@ -119,19 +119,31 @@
                         {% if modifications|length== 0 %}
                         <div class = 'column has-background-success has-text-6'><strong>No modifications Found</strong></div>
                         {% elif modifications|length > 3 %}
-                        <div class = 'column has-background-info'><strong>{{ modifications|length }} Found</strong></div>
+                        <div class = 'column has-background-info'><strong>{{ modifications['editorial']|length + modifications['non-editorial']|length }} Found</strong></div>
                         {% else %}
-                            <div class = 'column has-background-danger'><strong>{{ modifications|length}} Found</strong></div>
+                            <div class = 'column has-background-danger'><strong>{{ modifications['editorial']|length + modifications['non-editorial']|length }} Found</strong></div>
                         {% endif %}
                         <div class="column">
                             <div class="content">
                                 <p class = "is-size-7-mobile">Modifications found in the image:</p>
-                                <ul>
-                                {% for key in modifications.keys() %}
-                                        <li class="is-size-7-mobile"><strong>{{ key }}</strong></li>
-                                        <li class="is-size-7-mobile" style="margin-left: 15px">{{ modifications[key] }}</li>
-                                {% endfor %}
-                                </ul>
+                                {% if modifications['non-editorial']|length > 0 %}
+                                    <p class = "is-size-7-mobile"><strong>Non-Editorial:</strong></p>
+                                    <ul>
+                                    {% for key in modifications['non-editorial'].keys() %}
+                                            <li class="is-size-7-mobile"><strong>{{ key }}</strong></li>
+                                            <li class="is-size-7-mobile" style="margin-left: 15px">{{ modifications['non-editorial'][key] }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if modifications['editorial']|length > 0 %}
+                                    <p class = "is-size-7-mobile"><strong>Editorial:</strong></p>
+                                    <ul>
+                                    {% for key in modifications['editorial'].keys() %}
+                                            <li class="is-size-7-mobile"><strong>{{ key }}</strong></li>
+                                            <li class="is-size-7-mobile" style="margin-left: 15px">{{ modifications['editorial'][key] }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

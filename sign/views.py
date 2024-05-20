@@ -80,7 +80,7 @@ def manifest_upload():
     if form.validate_on_submit():
         if form.to_sign.data is not None:
             img_filename = form.to_sign.data.filename
-            form.to_sign.data.save(os.getenv('VERIFY_UPLOAD_FOLDER') + img_filename)
+            form.to_sign.data.save(os.getenv('TO_SIGN_FOLDER') + img_filename)
         else:
             upload = Image.open(requests.get(form.url_to_sign.data, stream=True).raw)
             img_filename = secure_filename(upload.filename)

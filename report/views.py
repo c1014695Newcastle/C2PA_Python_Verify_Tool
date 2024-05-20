@@ -90,7 +90,10 @@ def report():
     except c2pa.c2pa.Error.ManifestNotFound:
         return render_template('report.html', not_found=True, path=session['file'])
 
-    modifications = {}
+    modifications = {
+        'editorial': {},
+        'non-editorial': {}
+    }
     signer_info = {}
     ingredients = {}
     errors = {}
@@ -133,11 +136,14 @@ def report():
 
         if 'c2pa.actions' in assertion['label']:
             for action in assertion['data']['actions']:
-                if action['action'] == 'c2pa.created' and 'digitalSourceType' in action.keys():
+                if 'digitalSourceType' in action.keys():
                     if action['digitalSourceType'] == 'http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia':
                         ai = True
                 action_string = str(action['action']).replace('c2pa.', '').replace('_', ' ')
-                modifications[action_string] = lookup[action_string]
+                if action_string in ['repackaged', 'transcoded']:
+                    modifications['non-editorial'][action_string] = lookup[action_string]
+                else:
+                    modifications['editorial'][action_string] = lookup[action_string]
             session['actions'] = modifications
 
     for ingredient in active_manifest['ingredients']:

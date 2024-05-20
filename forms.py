@@ -27,7 +27,7 @@ class UploadSignForm(FlaskForm):
 
 
 class FormSign(FlaskForm):
-    to_sign = FileField('File', validators=[FileAllowed(['jpg', 'png', 'webp'])])
+    to_sign = FileField('File', validators=[DataRequired(), FileAllowed(['jpg', 'png', 'webp'])])
 
     # metadata
     metadata = RadioField('Metadata', choices=[(True, 'Yes'), (False, 'No')])
